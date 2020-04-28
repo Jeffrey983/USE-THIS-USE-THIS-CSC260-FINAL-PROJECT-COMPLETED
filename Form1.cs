@@ -7,120 +7,112 @@ namespace Snake
 {
     public partial class Form1 : Form
     {
-        private List<Circle> Snake = new List<Circle>();
-        private Circle food = new Circle();
+        private List<Circle> Snake = new List<Circle>(); //I'm not motivated enough to comment why I made a list like this.  
+        private Circle food = new Circle(); //making new private object for food
 
-        public Form1()
+        public Form1() //this code goes to the Form1 designer 
         {
             InitializeComponent();
 
-            //Set settings to default
-            new Settings();
+         
+            new Settings(); //makes settings from settings class default to the game
 
             //Set game speed and start timer
             SnakegameTimer.Interval = 1000 / Settings.Speed;
             SnakegameTimer.Tick += UpdateScreen;
             SnakegameTimer.Start();
 
-            //Start New game
-            StartGame();
+            
+            StartGame(); //Starts a new game
         }
 
         private void StartGame()
         {
             lblGameOver.Visible = false;
 
-            //Set settings to default
-            new Settings();
+            
+            new Settings();//sets the settings to default in the game
 
-            //Create new player object
-            Snake.Clear();
-            Circle head = new Circle { X = 10, Y = 5 };
-            Snake.Add(head);
+            
+            Snake.Clear(); //Creates a new player object
+            Circle head = new Circle { X = 10, Y = 5 }; //Creates a new player object
+            Snake.Add(head); //Creates a new player object
 
 
-            lblScore.Text = Settings.Score.ToString();
+            lblScore.Text = Settings.Score.ToString(); //prints additive score in a message in game
             GenerateFood();
 
         }
-
-        //Place random food object
-        private void GenerateFood()
+        private void GenerateFood() //Places a random food on any x or y coordinate/pos
         {
-            int maxXPos = pbCanvas.Size.Width / Settings.Width;
-            int maxYPos = pbCanvas.Size.Height / Settings.Height;
+            int maxXPos = pbCanvas.Size.Width / Settings.Width; //refer to comment above
+            int maxYPos = pbCanvas.Size.Height / Settings.Height; //refer to comment above
 
             Random random = new Random();
-            food = new Circle { X = random.Next(0, maxXPos), Y = random.Next(0, maxYPos) };
+            food = new Circle { X = random.Next(0, maxXPos), Y = random.Next(0, maxYPos) }; //refer to comment above
         }
 
 
-        private void UpdateScreen(object sender, EventArgs e)
+        private void UpdateScreen(object sender, EventArgs e) //constantly updates the canvas with all objects inside it. 
         {
-            //Check for Game Over
-            if (Settings.GameOver)
+            if (Settings.GameOver) //Checks for Game Over
             {
-                //Check if Enter is pressed
-                if (Input.KeyPressed(Keys.Enter))
+                
+                if (Input.KeyPressed(Keys.Enter)) //Checks if Enter is pressed
                 {
                     StartGame();
                 }
             }
             else
             {
-                if (Input.KeyPressed(Keys.Right) && Settings.Snakedirection != Direction.Left)
+                if (Input.KeyPressed(Keys.Right) && Settings.Snakedirection != Direction.Left) //makes sure the snake goes right
                     Settings.Snakedirection = Direction.Right;
 
-                else if (Input.KeyPressed(Keys.Left) && Settings.Snakedirection != Direction.Right)
+                else if (Input.KeyPressed(Keys.Left) && Settings.Snakedirection != Direction.Right) //makes sure the snake goes left
                     Settings.Snakedirection = Direction.Left;
 
-                else if (Input.KeyPressed(Keys.Up) && Settings.Snakedirection != Direction.Down)
+                else if (Input.KeyPressed(Keys.Up) && Settings.Snakedirection != Direction.Down) //makes sure the snake goes up 
                     Settings.Snakedirection = Direction.Up;
 
-                else if (Input.KeyPressed(Keys.Down) && Settings.Snakedirection != Direction.Up)
+                else if (Input.KeyPressed(Keys.Down) && Settings.Snakedirection != Direction.Up) //makes sure the snake goes down
                     Settings.Snakedirection = Direction.Down;
 
-                MovePlayer();
+                MovePlayer(); //I will get to this further below. It does exactly how it is name
             }
 
-            pbCanvas.Invalidate();
+            pbCanvas.Invalidate(); //allows stuff to be redrawn
 
         }
 
-        private void pbCanvas_Paint(object sender, PaintEventArgs e)
+        private void pbCanvas_Paint(object sender, PaintEventArgs e) 
         {
-            Graphics canvas = e.Graphics;
+            Graphics canvas = e.Graphics; //Sets snake color
 
             if (!Settings.GameOver)
             {
-                //Sets snake color
-
-                //Draw snake
-                for (int i = 0; i < Snake.Count; i++) //for loop we learned in Dylan Johnson's CSC 250 class with *actually programming demonstrations*
+                for (int i = 0; i < Snake.Count; i++) //for loop we learned in Dylan Johnson's CSC 250 class 
                 {
-                    Brush snakeColour;
+                    Brush snakeColor;
                     if (i == 0)
-                        snakeColour = Brushes.Black; //draws snake's head
+                        snakeColor = Brushes.Black; //draws snake's head
                     else
-                        snakeColour = Brushes.Green; //makes snake's body green
+                        snakeColor = Brushes.Green; //makes snake's body green
 
-                    //Draw snake
-                    canvas.FillEllipse(snakeColour,
+                    canvas.FillEllipse(snakeColor, //Draws snake
                         new Rectangle(Snake[i].X * Settings.Width,
                                       Snake[i].Y * Settings.Height,
                                       Settings.Width, Settings.Height));
 
 
-                    //Draw Food
-                    canvas.FillEllipse(Brushes.Red,
+                    canvas.FillEllipse(Brushes.Red, //Draws Food
                         new Rectangle(food.X * Settings.Width,
                              food.Y * Settings.Height, Settings.Width, Settings.Height));
 
                 }
             }
-            else
+            else //this prints results once your snake runs into a wall or itself
             {
-                string gameOver = "Game over \nYour final score is: " + Settings.Score + "\nPress Enter to try again";
+                string gameOver = "Game over \n Your final score is: " + Settings.Score + " \n Press Enter to try again";
                 lblGameOver.Text = gameOver;
                 lblGameOver.Visible = true;
             }
@@ -129,10 +121,10 @@ namespace Snake
 
         private void MovePlayer()
         {
-            for (int i = Snake.Count - 1; i >= 0; i--) //a for loop we learned in CSC 250, WITH ACTUAL PROGRAMMING DEMONSTRATIONS FROM Dylan Johnson. Give him a thank you for teaching Jeffrey For Loops with i++
+            for (int i = Snake.Count - 1; i >= 0; i--) //a for loop we learned in CSC 250
             {
                 
-                if (i == 0)
+                if (i == 0) 
                 {
                     switch (Settings.Snakedirection)
                     {
@@ -162,7 +154,7 @@ namespace Snake
 
 
                     //Detect collission with body
-                    for (int j = 1; j < Snake.Count; j++)
+                    for (int j = 1; j < Snake.Count; j++) //more CSC 250 I learned with Dylan Johnson
                     {
                         if (Snake[i].X == Snake[j].X &&
                            Snake[i].Y == Snake[j].Y)
@@ -216,15 +208,15 @@ namespace Snake
 
         private void Die()
         {
-            Settings.GameOver = true;
+            Settings.GameOver = true; //the snake isn't immortal now is it?
         }
 
-        private void lblGameOver_Click(object sender, EventArgs e)
+        private void lblGameOver_Click(object sender, EventArgs e) // DO NOT REMOVE THIS
         {
 
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e) //DO NOT REMOVE THIS
         {
 
         }

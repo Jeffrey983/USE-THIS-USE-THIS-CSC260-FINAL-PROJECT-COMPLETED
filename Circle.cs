@@ -11,7 +11,7 @@ namespace Snake
         public int X { get; set; }
         public int Y { get; set; }
 
-        public Circle()
+        public Circle() //well it's a circle
         {
             X = 0;
             Y = 0;

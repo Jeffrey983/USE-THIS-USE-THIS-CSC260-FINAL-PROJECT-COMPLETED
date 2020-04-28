@@ -10,11 +10,9 @@ namespace Snake
 {
     internal class Input
     {
-        //Load list of available Keyboard buttons
-        private static Hashtable keyTable = new Hashtable();
+        private static Hashtable keyTable = new Hashtable(); //Loads a list of available Keyboard buttons for the program to use
 
-        //Perform a check to see if a particular button is pressed.
-        public static bool KeyPressed(Keys key)
+        public static bool KeyPressed(Keys key) //Perform a check to see if a particular button is pressed.
         {
             if (keyTable[key] == null)
             {
@@ -24,8 +22,8 @@ namespace Snake
             return (bool)keyTable[key];
         }
 
-        //Detect if a keyboard button is pressed
-        public static void ChangeState(Keys key, bool state)
+       
+        public static void ChangeState(Keys key, bool state)  //Detects if a keyboard button is pressed
         {
             keyTable[key] = state;
         }
